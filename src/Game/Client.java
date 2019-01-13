@@ -1,6 +1,6 @@
 package Game;
 
-import ElementsOfMenu.HowManyPlayers;
+//import ElementsOfMenu.HowManyPlayers;
 import ElementsOfMenu.MainMenu;
 
 import javax.swing.*;
@@ -25,6 +25,7 @@ public class Client implements ActionListener {
         frame=new JFrame("Menu");
         frame.setBounds(200,200,513,389);
         frame.setResizable(false);
+        frame.setVisible(true);
 
        menu=new JPanel();//(new GridLayout(3,1));
        frame.add(menu);
@@ -64,7 +65,55 @@ public class Client implements ActionListener {
            String number=getSizeOfBoard();
            action.createGame(number);
         }
+        if(source==howToPlay){
+            JOptionPane.showMessageDialog( frame,"Application created by Michał Jachorek and Filip Kulasza","Information",JOptionPane.PLAIN_MESSAGE);
+        }
     }
+    public void clearL(){//??
+       frame.getContentPane().removeAll();
+       jpanels = new ArrayList<>();
+    }
+    public void refreshLobby(ArrayList<String> players){
+       JPanel panel=addAButton();
+
+       for(String s : players){
+           JLabel newlebel=new JLabel(s);
+           panel.add(newlebel);
+       }
+       jpanels.add(panel);
+       frame.getContentPane().add(panel);
+
+       refresh();
+
+    }
+    public void refresh(){
+       frame.invalidate();
+       frame.validate();
+       frame.repaint();
+    }
+    private JPanel addAButton(){
+       final JPanel panel=new JPanel(new FlowLayout(FlowLayout.LEFT));
+       JButton newbutton=new JButton("Join Game");
+       newbutton.addActionListener(new ActionListener() {
+           @Override
+           public void actionPerformed(ActionEvent e) {
+               action.joinGame(jpanels.indexOf(panel));
+           }
+       });
+       newbutton.setAlignmentX(JButton.RIGHT);
+       panel.setAlignmentX(Component.CENTER_ALIGNMENT);
+       panel.add(newbutton);
+       return panel;
+    }
+
+    public void run(){
+       action.run();
+    }
+    public void drawWindow(String size, String numberOfPlayers){
+       window=new GameWindow(Integer.valueOf(size),Integer.valueOf(numberOfPlayers), action);
+       frame.setVisible(false);//Lobby menu
+    }
+
     private String getSizeOfBoard(){
         return JOptionPane.showInputDialog(frame,"Give board size:", "Board size", JOptionPane.PLAIN_MESSAGE);
     }

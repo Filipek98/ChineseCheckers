@@ -3,17 +3,32 @@ package Game;
 import PartsOfGame.Field;
 import PartsOfGame.GameboardCreator;
 import PartsOfGame.Pawn;
+import PartsOfGame.Point;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 
 public class GameBoardPanel extends JPanel
 {
     private FieldButton[][] board;
     private ColorsOfField colors;
-    GameBoardPanel(int radius, Color player, int numberOfPlayers)
+    private JLabel newlebel;
+    GameBoardPanel(int radius, Color player,Action action, int numberOfPlayers)
     {
+        JLabel newlebe2=new JLabel("Window belongs to: "+action.getName());
+        newlebel=new JLabel("Current player: ");
+        this.add(newlebe2);
+        this.add(newlebel);
+        newlebe2.setLocation(3,4);
+        newlebel.setLocation(3,20);
+        newlebe2.setSize(300,16);
+        newlebel.setSize(300,16);
+
+        this.setLayout(null);
+        this.setSize(750, 750);
+
         int size = 4 * radius + 1;
         this.board = new FieldButton[size][size];
         colors=new ColorsOfField();
@@ -60,6 +75,10 @@ public class GameBoardPanel extends JPanel
         }
         this.repaint();
     }
+    void setCurrentPlayerDisplay(String player){
+        newlebel.setText("Current player: "+player);
+    }
+
     public void movePwn(int x1, int y1, int x2, int y2)
     {
         Pawn pawn = new Pawn(board[x1][y1].getPawn().getColor());
@@ -69,6 +88,22 @@ public class GameBoardPanel extends JPanel
 
         board[x1][y1].colorPawn(colors);
         board[x2][y2].colorPawn(colors);
+    }
+    void backlight(ArrayList<Point> points){
+        int x,y;
+        for(Point p: points){
+            x=p.getX();
+            y=p.getY();
+            board[x][y].colorPawn(colors);
+        }
+    }
+    void lowlight(ArrayList<Point> points){
+        int x,y;
+        for(Point p : points){
+            x=p.getX();
+            y=p.getY();
+            board[x][y].setBackground(colors.backlighted);
+        }
     }
 
 }

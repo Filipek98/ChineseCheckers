@@ -9,6 +9,8 @@ public class ColorsOfField {
     private Color pawnYellow, pawnBlack, pawnGreen, pawnBlue, pawnRed, pawnWhite, fieldYellow, fieldBlack, fieldGreen, fieldBlue, fieldRed, fieldWhite;
     public Color empty;
     public Color selected;
+    Color backlighted;
+
 
     ColorsOfField(){
         pawnYellow=new Color(250,250,0);

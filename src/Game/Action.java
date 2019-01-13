@@ -14,7 +14,7 @@ public class Action {
 
     private GameBoardPanel panel;
     private Client client;
-    private String nameOfWindow;
+    private String name;
     private BufferedReader in;//to Socket
     private PrintWriter out;
     FieldButton buttonClicked;
@@ -24,7 +24,7 @@ public class Action {
         buttonClicked=null;
         backlight=null;
         panel=null;
-        nameOfWindow="";
+        name="";
         this.client=client;
 
         try{
@@ -84,6 +84,88 @@ public class Action {
             }
         }
     }
+    public void run(){
+        while(true){
+            try{
+                String line=in.readLine();
+                if(line.equals("RESET")){
+                    client.clearL();//create the method to clear lobby in client class
+                }else if(line.equals("GAME WINDOW")){
+                    String line2=in.readLine();
+                    String numberOfPlayers=in.readLine();
+                    client.drawWindow(line2,numberOfPlayers);//create the method in client class
+                }else if(line.equals("NEW GAME WINDOW")){
+                    ArrayList<String> players=getInformationAboutGame();
+                    client.refreshLobby(players);
+                }else if(line.equals("REFRESH")){
+                    client.frame.setVisible(true);
+                    client.refresh();
+                }else if(line.equals("TEST")){//??
+                    String secondLine=in.readLine();
+                    decodeMessage(secondLine);
+                }else if(line.equals("CURRENT PLAYER")){
+                    String secondLine=in.readLine();
+                    panel.setCurrentPlayerDisplay(secondLine);
+                }
+            }catch(IOException e){
+                e.printStackTrace();
+            }
+        }
+    }
+    void decodeMessage(String message){
+        String code[]=message.split(",");
+
+        if(code[0].equals("move")){
+            int x1,x2,y1,y2;
+            x1=Integer.parseInt(code[1]);
+            y1=Integer.parseInt(code[2]);
+            x2=Integer.parseInt(code[3]);
+            y2=Integer.parseInt(code[4]);
+            doMove(x1,y1,x2,y2);
+        }else if(code[0].equals("wrongMove")){
+            buttonClicked=null;
+            lowlight();
+        }else if(code[0].equals("returnMoves")){
+            int i=1;
+            int x,y;
+            ArrayList<Point> array=new ArrayList<>();
+
+            while(!code[i].equals("end")){
+                x=Integer.parseInt(code[i]);
+                y=Integer.parseInt(code[i+1]);
+                i+=2;
+                array.add(new Point(x,y));
+            }
+            backlight(array);
+        }else if(code[0].equals("pog")){
+            String msg=code[1];
+            JOptionPane.showMessageDialog(null,msg+" won!","Congratulation",JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+    void lowlight(){
+        if(backlight==null){
+            return;
+        }if(backlight.size()!=0){
+            panel.lowlight(backlight);
+            backlight.clear();
+        }
+    }
+    void backlight(ArrayList<Point> points){
+        backlight=points;
+        panel.backlight(points);
+    }
+    void doMove(int x1,int y1,int x2,int y2){
+        lowlight();
+        buttonClicked=null;
+        panel.movePwn(x1,y1,x2,y2);
+    }
+    public String getName(){
+        return name;
+    }
+    public void joinGame(int index){
+        out.println("JOIN GAME");
+        out.println(index);
+    }
 
     public void setNameOfWindow() {
        while(true){
@@ -99,5 +181,19 @@ public class Action {
                e.printStackTrace();
            }
        }
+    }
+    private ArrayList<String> getInformationAboutGame(){
+        ArrayList<String> players=new ArrayList<>();
+        try{
+            String line=in.readLine();
+            while (!line.equals("STOP")){
+                players.add(line);
+                line=in.readLine();
+            }
+            return players;
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+        return players;
     }
 }

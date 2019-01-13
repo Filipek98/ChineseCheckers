@@ -1,4 +1,4 @@
-package ElementsOfMenu;
+/*package ElementsOfMenu;
 
 import Game.GameWindow;
 
@@ -72,4 +72,4 @@ public class HowManyPlayers extends JFrame implements ActionListener {
     public String getBoardSize(String size){
         return size;
     }
-}
+}*/

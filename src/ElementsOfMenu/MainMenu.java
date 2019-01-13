@@ -29,7 +29,7 @@ public class MainMenu extends JFrame implements ActionListener {
 
         background.setLayout(null);
         startGame=new JButton("Start Game");
-        howToPlay=new JButton("How to play");
+        howToPlay=new JButton("Help");
         exit=new JButton("Exit");
         startGame.setBackground(cButtons);
         howToPlay.setBackground(cButtons);
@@ -55,8 +55,10 @@ public class MainMenu extends JFrame implements ActionListener {
         Object source = e.getSource();
         if(source==startGame){
             setVisible(false);
-            HowManyPlayers number=new HowManyPlayers();
-
+            //HowManyPlayers number=new HowManyPlayers();
+        }
+        if(source==howToPlay){
+            JOptionPane.showMessageDialog( menu,"Application created by Michał Jachorek and Filip Kulasza","Information",JOptionPane.PLAIN_MESSAGE);
         }
     }
 }

@@ -8,6 +8,7 @@ public class Maint {
         Client nowa=new Client();
         nowa.frame.setDefaultCloseOperation(3);
         nowa.frame.setVisible(true);
+        nowa.run();
 
     }
 }
